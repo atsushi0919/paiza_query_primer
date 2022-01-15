@@ -12,8 +12,7 @@ namespace _01_04_single_pop
             Queue<int> queue = new Queue<int>();
             for (int i = 0; i < n; i++)
             {
-                int value = int.Parse(Console.ReadLine());
-                queue.Enqueue(value);
+                queue.Enqueue(int.Parse(Console.ReadLine()));
             }
 
             // Dequeue
