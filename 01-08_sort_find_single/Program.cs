@@ -1,76 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace _01_08_sort_find_single
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            Console.WriteLine("Hello World!");
+            // 入力
+            string[] input = Console.ReadLine().Split();
+            int n = int.Parse(input[0]);    // 転校生,paiza以外の人数
+            int x = int.Parse(input[1]);    // 転校生の身長
+            int p = int.Parse(input[2]);    // paizaの身長
+            List<int> students = new List<int>() { x, p };
+            // 転校生,paiza以外の身長を students に格納
+            for (int i = 0; i < n; i++)
+            {
+                int height = int.Parse(Console.ReadLine());
+                students.Add(height);
+            }
+
+            // 身長順に並び替え
+            students.Sort();
+            // paiza の位置を探索する(身長の重複なし)
+            int position = students.IndexOf(p) + 1;
+
+            // 出力
+            Console.WriteLine(position);
         }
     }
 }
-
-
-/*
-ソートと検索 (paizaランク D 相当)
-問題にチャレンジして、ユーザー同士で解答を教え合ったり、コードを公開してみよう！
-
-シェア用URL:
-https://paiza.jp/works/mondai/query_primer/query_primer__sort_find_single
-問題文のURLをコピーする
- 下記の問題をプログラミングしてみよう！
-paiza 君のクラスには paiza 君を含めて N + 1 人の生徒がいます。paiza 君の身長は P cm です。paiza 君以外の N 人の生徒の身長は A_1, ... ,A_N です。
-今日、クラスに身長 X cm の転校生が 1 人やってきました。転校生が入ってきた後 N + 2 人のクラス全員で背の順で並んだ時、 paiza 君は前から何番目に並ぶことになるでしょうか。
-
-なお、背の順の先頭の生徒を前から 1 番目の生徒とします。
-
-▼　下記解答欄にコードを記入してみよう
-
-入力される値
-N X P
-A_1
-...
-A_N
-
-
-・1 行目では、クラスの paiza 君以外の生徒数 N と転校生の身長 X と paiza君の身長 P が与えられます。
-・続く N 行では、N 人の生徒の身長が与えられます。
-
-入力値最終行の末尾に改行が１つ入ります。
-文字列は標準入力から渡されます。 標準入力からの値取得方法はこちらをご確認ください
-期待する出力
-・転校生を含む N+2 人が背の順に並んだときに paiza 君が前から何番目になるかを 1 行で出力してください。
-・また、出力の末尾には改行を入れてください。
-
-条件
-・1 ≦ N ≦ 100,000
-・100 ≦ X , P ≦ 200
-・100 ≦ A_i ≦ 200 (1 ≦ i ≦ N)
-・転校生を含め、クラスの中で身長が P cm の生徒は paiza 君のみであることが保証されている
-
-入力例1
-3 188 174
-181
-177
-113
-
-出力例1
-2
-
-入力例2
-10 139 146
-165
-159
-144
-195
-188
-118
-118
-141
-199
-124
-
-出力例2
-7
-*/
