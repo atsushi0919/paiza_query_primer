@@ -1,114 +1,54 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace _01_09_sort_find_multi
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            Console.WriteLine("Hello World!");
+            // 入力
+            string[] input = Console.ReadLine().Split();
+            int n = int.Parse(input[0]);    // paiza以外の人数
+            int k = int.Parse(input[1]);    // イベント数
+            int p = int.Parse(input[2]);    // paizaの身長
+            List<int> students = new List<int>() { p };
+            // paiza 以外の身長を students に格納
+            for (int i = 0; i < n; i++)
+            {
+                int height = int.Parse(Console.ReadLine());
+                students.Add(height);
+            }
+            string[] requests = new string[k];
+            for (int i = 0; i < k; i++)
+            {
+                requests[i] = Console.ReadLine();
+            }
+
+            // paiza の初期位置
+            students.Sort();
+            int position = students.IndexOf(p) + 1;
+
+            // requests の先頭から順に処理
+            List<int> results = new List<int>();
+            foreach (string request in requests)
+            {
+                string[] requestParams = request.Split();
+                string method = requestParams[0];
+                switch (method)
+                {
+                    case "join":
+                        int height = int.Parse(requestParams[1]);
+                        if (p > height) position++;
+                        break;
+                    case "sorting":
+                        results.Add(position);
+                        break;
+                }
+            }
+
+            // 出力
+            Console.WriteLine(String.Join("\n", results));
         }
     }
 }
-
-/*
-ソートと検索 (query) (paizaランク D 相当)
-問題にチャレンジして、ユーザー同士で解答を教え合ったり、コードを公開してみよう！
-
-シェア用URL:
-https://paiza.jp/works/mondai/query_primer/query_primer__sort_find_multi
-問題文のURLをコピーする
- 下記の問題をプログラミングしてみよう！
-paiza 君のクラスには paiza 君を含めて N + 1 人の生徒がいます。paiza 君の身長は P cm で、他の N 人の生徒の身長はそれぞれ A_1 ... A_N です。
-このクラスには次のようなイベントが合計 K 回起こります。
-それぞれのイベントは以下のうちのいずれかです。
-
-・転校生がクラスに加入する
-・全員で背の順に並ぶ
-
-全員で背の順で並ぶイベントが起こるたびに、そのとき paiza 君は前から何番目に並ぶことになるかを出力してください。
-
-▼　下記解答欄にコードを記入してみよう
-
-入力される値
-N K P
-A_1
-...
-A_N
-event_1
-...
-event_K
-
-
-・1 行目では、paiza 君を除いたクラスの人数 N と起こるイベントの回数 K と paiza君の身長 P が与えられます。
-・続く N 行では、初めにクラスにいる N 人の生徒の身長が与えられます。
-・続く K 行では、起こるイベントを表す文字列が与えられます。
-
-入力値最終行の末尾に改行が１つ入ります。
-文字列は標準入力から渡されます。 標準入力からの値取得方法はこちらをご確認ください
-期待する出力
-・全員で背の順で並ぶイベントが起こるたびに、paiza 君が前から何番目に並ぶことになるかを出力してください。
-・また、出力の末尾には改行を入れてください。
-
-条件
-・1 ≦ N , K ≦ 100,000
-・100 ≦ P ≦ 200
-・100 ≦ A_i ≦ 200 (1 ≦ i ≦ N)
-・転校生を含め、クラスの中で P cm の生徒は paiza 君のみであることが保証されている
-・event_i (1 ≦ i ≦ K) は以下のいずれかの形式で与えられる。
-
-
-
-join num
-
-身長 num(cm) の生徒がクラスに加入したことを表す。
-
-
-sorting
-
-生徒が背の順に並ぶことを表す
-この入力が与えられるたび、paiza 君が背の順で前から何番目に並ぶことになるかを出力してください。
-
-
-入力例1
-3 3 176
-118
-174
-133
-join 137
-join 177
-sorting
-
-出力例1
-5
-
-入力例2
-10 10 145
-169
-164
-162
-112
-191
-168
-168
-199
-176
-146
-join 196
-join 142
-sorting
-sorting
-join 131
-join 140
-sorting
-sorting
-join 143
-sorting
-
-出力例2
-3
-3
-5
-5
-6
-*/
