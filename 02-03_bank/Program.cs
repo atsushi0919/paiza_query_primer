@@ -14,17 +14,17 @@ namespace _02_03_bank
             int k = int.Parse(input[1]);
             string[] companies = new string[n];
             // 会社情報入力, 口座情報初期化
-            var bankAccountTable =
+            var accountTable =
                 new Dictionary<string, Tuple<string, int>>();
             for (int i = 0; i < n; i++)
             {
                 input = Console.ReadLine().Split();
-                string companyName = input[0];
-                string accountNumber = input[1];
+                string name = input[0];
+                string number = input[1];
                 int balance = int.Parse(input[2]);
-                companies[i] = companyName;
-                bankAccountTable[companyName] =
-                    new Tuple<string, int>(accountNumber, balance);
+                companies[i] = name;
+                accountTable[name] =
+                    new Tuple<string, int>(number, balance);
             }
             // 取引入力
             string[] requests = new string[k];
@@ -37,24 +37,28 @@ namespace _02_03_bank
             foreach (var request in requests)
             {
                 string[] requestParams = request.Split();
-                string companyName = requestParams[0];
-                string accountNumber = requestParams[1];
-                int withdrawalAmount = int.Parse(requestParams[2]);
-                string selectedAccountNumber = bankAccountTable[companyName].Item1;
-                int balance = bankAccountTable[companyName].Item2;
+                string name = requestParams[0];
+                string number = requestParams[1];
 
-                if (selectedAccountNumber == accountNumber)
+                // 会社名が登録されていなければスキップ
+                if (!accountTable.ContainsKey(name)) continue;
+
+                // 口座番号が正しければ出金処理
+                int withdrawalAmount = int.Parse(requestParams[2]);
+                string selectedNumber = accountTable[name].Item1;
+                if (selectedNumber == number)
                 {
-                    bankAccountTable[companyName] =
-                        new Tuple<string, int>(accountNumber,
-                                               balance - withdrawalAmount);
+                    int balance = accountTable[name].Item2;
+                    balance -= withdrawalAmount;
+                    accountTable[name] =
+                        new Tuple<string, int>(number, balance);
                 }
             }
 
             // 出力
             foreach (var company in companies)
             {
-                int balance = bankAccountTable[company].Item2;
+                int balance = accountTable[company].Item2;
                 Console.WriteLine($"{company} {balance}");
             }
         }
