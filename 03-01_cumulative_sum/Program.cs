@@ -11,7 +11,7 @@ namespace _03_01_cumulative_sum
             int n = int.Parse(input[0]);
             int k = int.Parse(input[1]);
             int[] array = new int[n];
-            int[] sectionSum = new int[n];
+            int[] sectionSum = new int[n + 1];
             int sum = 0;
             for (int i = 0; i < n; i++)
             {
@@ -19,7 +19,7 @@ namespace _03_01_cumulative_sum
                 sum += value;
                 array[i] = value;
                 // 区間合計
-                sectionSum[i] = sum;
+                sectionSum[i + 1] = sum;
             }
             int[] q = new int[k];
             for (int i = 0; i < k; i++)
@@ -30,7 +30,7 @@ namespace _03_01_cumulative_sum
             // 出力
             foreach (var sectionNum in q)
             {
-                Console.WriteLine(sectionSum[sectionNum - 1]);
+                Console.WriteLine(sectionSum[sectionNum]);
             }
         }
     }
