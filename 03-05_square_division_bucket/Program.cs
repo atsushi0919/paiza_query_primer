@@ -11,8 +11,8 @@ namespace _03_05_square_division_bucket
             // (-100,000 ≦ value ≦ 100,000)
             int SIZE = 10000;
             int X = 100;
-            int DEFAULT_MAX_VALUE = -100_001;
-            int[] array = new int[X];
+            int DEFAULT_MAX_VALUE = -100001;
+            int[] maxValues = new int[X];
 
             int maxValue = DEFAULT_MAX_VALUE;
             for (int i = 1; i <= SIZE; i++)
@@ -24,13 +24,13 @@ namespace _03_05_square_division_bucket
                 if (i % X == 0)
                 {
                     int index = i / X - 1;
-                    array[index] = maxValue;
+                    maxValues[index] = maxValue;
                     maxValue = DEFAULT_MAX_VALUE;
                 }
             }
 
             // 出力
-            Console.WriteLine(String.Join("\n", array));
+            Console.WriteLine(String.Join("\n", maxValues));
         }
     }
 }
