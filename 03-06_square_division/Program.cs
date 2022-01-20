@@ -4,14 +4,144 @@ namespace _03_06_square_division
 {
     class Program
     {
-        static void Main(string[] args)
+        // SIZE: 要素数, X: 要素数の平方根
+        // DEFAULT_MAX_VALUE: 最大値の初期値
+        // (-100,000 ≦ value ≦ 100,000)
+        const int SIZE = 10000;
+        const int X = 100;
+        const int DEFAULT_MAX_VALUE = -100001;
+
+        static int GetMaxValue(int[] array, int l, int r)
         {
-            Console.WriteLine("Hello World!");
+            int maxValue = DEFAULT_MAX_VALUE;
+            for (int i = l - 1; i < r; i++)
+                maxValue = Math.Max(maxValue, array[i]);
+            return maxValue;
+        }
+
+        static int[] GetCulclatedSection(int l, int r)
+        {
+            int secL, secR;
+            if (l % X == 0)
+                secL = l + 1;
+            else if (l == l / X * X + 1)
+                secL = l;
+            else
+                secL = (l / X + 1) * X + 1;
+
+            secR = r / X * X;
+
+            return new int[] { secL, secR };
+        }
+        static void Main()
+        {
+            int[] array = new int[SIZE];
+            int[] maxValues = new int[X];
+            int k = int.Parse(Console.ReadLine());
+            int maxValue = DEFAULT_MAX_VALUE;
+            for (int i = 1; i <= SIZE; i++)
+            {
+                int value = int.Parse(Console.ReadLine());
+                array[i - 1] = value;
+                maxValue = Math.Max(maxValue, value);
+
+                // X 要素ごとの最大値
+                if (i % X == 0)
+                {
+                    int index = i / X - 1;
+                    maxValues[index] = maxValue;
+                    maxValue = DEFAULT_MAX_VALUE;
+                }
+            }
+
+            // 区間の最大値を求める
+            int[] results = new int[k];
+            for (int i = 0; i < k; i++)
+            {
+                maxValue = DEFAULT_MAX_VALUE;
+                string[] input = Console.ReadLine().Split();
+                int l = int.Parse(input[0]);
+                int r = int.Parse(input[1]);
+
+                // maxValuesに含まれる区間
+                int[] calculatedSection = GetCulclatedSection(l, r);
+                int secL = calculatedSection[0];
+                int secR = calculatedSection[1];
+                Console.WriteLine($"{secL} {secR}");
+                Console.WriteLine("----------");
+                if (secL < secR)
+                {
+                    maxValue = Math.Max(
+                        maxValue,
+                        GetMaxValue(maxValues, secL / X + 1, secR / X));
+                }
+
+                // l の端数処理
+                if (l <= secL)
+                    maxValue = Math.Max(
+                        maxValue,
+                        GetMaxValue(array, l, secL - 1));
+
+                // r の端数処理
+                if (r >= secR)
+                    maxValue = Math.Max(
+                        maxValue,
+                        GetMaxValue(array, secR + 1, r));
+
+                results[i] = maxValue;
+            }
+
+            // 出力
+            // Console.WriteLine(String.Join("\n", results));
         }
     }
 }
 
 /*
+
+// 区間の最大値を求める
+            int[] results = new int[k];
+            for (int i = 0; i < k; i++)
+            {
+                maxValue = DEFAULT_MAX_VALUE;
+                string[] input = Console.ReadLine().Split();
+                int l = int.Parse(input[0]);
+                int r = int.Parse(input[1]);
+
+                // maxValuesに含まれる区間
+                int secL, secR;
+                if (l % X == 0)
+                    secL = l + 1;
+                else if (l == l / X * X + 1)
+                    secL = l;
+                else
+                    secL = (l / X + 1) * X + 1;
+
+                secR = r / X * X;
+                maxValue = Math.Max(
+                    maxValue,
+                    GetMaxValue(maxValues, secL / X + 1, secR / X + 1));
+
+                // l の端数処理
+                if (l < secL)
+                    maxValue = Math.Max(
+                        maxValue,
+                        GetMaxValue(array, l, secL - 1)
+                    );
+
+                // r の端数処理
+                if (r > secR)
+                    maxValue = Math.Max(
+                        maxValue,
+                        GetMaxValue(array, secR + 1, r)
+                    );
+
+                results[i] = maxValue;
+            }
+
+            // 出力
+            Console.WriteLine(String.Join("\n", results));
+
 平方分割 (paizaランク B 相当)
 問題にチャレンジして、ユーザー同士で解答を教え合ったり、コードを公開してみよう！
 
@@ -19,13 +149,17 @@ namespace _03_06_square_division
 https://paiza.jp/works/mondai/query_primer/query_primer__square_division
 問題文のURLをコピーする
  下記の問題をプログラミングしてみよう！
-paiza くんは、長さ N の整数列 A の区間 A[l_i] ... A[r_i] の最大の要素の値を K 回求めたいのですが、与えられる区間の要素をいちいち全て調べていては時間計算量にして最大で O(NK) かかってしまいます。
+paiza くんは、長さ N の整数列 A の区間 A[l_i] ... A[r_i] の最大の要素の値を K 回求めたいのですが、
+与えられる区間の要素をいちいち全て調べていては時間計算量にして最大で O(NK) かかってしまいます。
 そこで、paiza くんは 平方分割 と言われるアルゴリズムを用いることで、この計算量を減らそうと考えました。
 平方分割とは、次のようなアルゴリズムです。
 
-1. 長さ N の配列が与えられたとき、N の平方根を x を求め、配列を長さ x の配列に分割し、それぞれの配列について目的の値を調べておく。
+1. 長さ N の配列が与えられたとき、N の平方根を x を求め、配列を長さ x の配列に分割し、
+それぞれの配列について目的の値を調べておく。
 （分割で得られる最後の配列の長さは必ずしも x になるとは限りません）
-2. 調べたい区間に完全に含まれている配列についての 1. で求めた値と、その配列以外の部分の値を全て調べて、目的の値を求める。
+
+2. 調べたい区間に完全に含まれている配列についての 1. で求めた値と、その配列以外の部分の値を全て調べて、
+目的の値を求める。
 
 
 
